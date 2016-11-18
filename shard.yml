@@ -1,0 +1,7 @@
+name: selenite-db
+version: 0.1.0
+
+authors:
+  - Douglas Rossignolli <douglas@kanamobi.com.br>
+
+license: MIT
