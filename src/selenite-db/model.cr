@@ -50,7 +50,7 @@ module DB
 
     def save
       query = %(INSERT INTO #{table_name} (#{insert_keys}) VALUES(#{insert_values}) RETURNING id;)
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = self.class.connection.exec(query)
       if result.rows.size > 0
         self.id = result.rows.first[0]
@@ -63,7 +63,7 @@ module DB
     def update_columns(params)
       params["updated_at"] = Time.now.to_s
       query = %(UPDATE #{table_name} SET #{update_values(params)} WHERE id = #{@id})
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = self.class.connection.exec(query)
       true
     end
@@ -124,7 +124,7 @@ module DB
 
     def self.exists?(column, value)
       query = %(SELECT id FROM #{table_name} WHERE #{column} = '#{value}' LIMIT 1;)
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = connection.exec(query)
       result.rows.size > 0
     end
@@ -132,14 +132,14 @@ module DB
     def self.exists?(params)
       where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
       query = %(SELECT id FROM #{table_name} WHERE #{where} LIMIT 1;)
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = connection.exec(query)
       result.rows.size > 0
     end
 
     def self.find(id : Int32 | Int64 | String | Nil)
       query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE id = id LIMIT 1;)
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = connection.exec(query)
 
       if result.rows.size > 0
@@ -152,14 +152,14 @@ module DB
     def self.get_result_by(params)
       where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
       query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE #{where} LIMIT 1;)
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       connection.exec(query)
     end
     
     def self.find_by(params)
       where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
       query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE #{where} LIMIT 1;)      
-      putsl(query.colorize(:light_gray).bold, :info, "Model")
+      DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
       result = connection.exec(query)
       if result.rows.size > 0
         new(result.to_hash.first)

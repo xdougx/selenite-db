@@ -4,4 +4,9 @@ version: 0.1.0
 authors:
   - Douglas Rossignolli <douglas@kanamobi.com.br>
 
+dependencies:
+  crystal-pg:
+    github: will/crystal-pg
+    version: ~> 0.4.3
+
 license: MIT

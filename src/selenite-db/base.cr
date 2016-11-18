@@ -30,7 +30,13 @@ module DB
 
     protected def self.configuration
       config = configuration_by_env
-      base_configuration.each { |key, value| config[key] = value unless config.keys.includes?(key) }
+      
+      base_configuration.each do |key, value|
+        unless config.keys.includes?(key)
+          config[key] = value
+        end
+      end
+
       config
     end
 
