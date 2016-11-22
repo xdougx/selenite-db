@@ -53,15 +53,15 @@ end
 
 ```crystal
 
-def self.exec(query) # executes a query and return a result from PG
-def exec(query) # alias for an instance
-def save; end # persist your model
-def update_columns(params); end # update the values direct
-def self.exists?(column, value); end # verify if an id exists
-def self.exists?(params); end # verify if exists using many params
-def self.find(id : Int32 | Int64 | String | Nil); end # find with id
-def self.get_result_by(params); end # find using many params
-def self.find_by(params); end # find using many params
+def self.exec(query)                                   # executes a query and return a result from PG
+def exec(query)                                        # alias for an instance
+def save; end                                          # persist your model
+def update_columns(params); end                        # update the values direct
+def self.exists?(column, value); end                   # verify if an id exists
+def self.exists?(params); end                          # verify if exists using many params
+def self.find(id : Int32 | Int64 | String | Nil); end  # find with id
+def self.get_result_by(params); end                    # find using many params
+def self.find_by(params); end                          # find using many params
 ```
 
 ## Development
