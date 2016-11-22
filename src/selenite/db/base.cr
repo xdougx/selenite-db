@@ -3,8 +3,7 @@ module Selenite
     class Base
       extend DB
       include Selenite::DB::Atributtor
-
-      @@connection : PG::Connection?
+8
       @@config : Selenite::DB::Configuration
       @@config = Selenite::DB::Configuration.get_configuration
       @@pool : ConnectionPool(PG::Connection)?
