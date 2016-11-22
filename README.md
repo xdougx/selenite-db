@@ -108,8 +108,8 @@ puts "User email is: #{user.email}"
 
 ```crystal
 
-def self.exec(query)                                   # executes a query and return a result from PG
-def exec(query)                                        # alias for an instance
+def self.exec(query); end                              # executes a query and return a result from PG
+def exec(query); end                                   # alias for an instance
 def save; end                                          # persist your model
 def update_columns(params); end                        # update the values direct
 def self.exists?(column, value); end                   # verify if an id exists
