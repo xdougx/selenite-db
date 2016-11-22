@@ -5,19 +5,13 @@ module Selenite
       @created_at : Time?
       @updated_at : Time?
 
-      property(id, created_at, updated_at)
-
-      def set_defaults
-        @created_at = Time.now if(@created_at == "" || @created_at.nil?) 
-        @updated_at = Time.now if(@updated_at == "" || @updated_at.nil?) 
-      end
+      property(id)
 
       def table_name
         self.class.table_name
       end
 
       def save
-        set_defaults
         query = %(INSERT INTO #{table_name} (#{insert_keys}) VALUES(#{insert_values}) RETURNING id;)
         DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = self.exec(query)
@@ -39,9 +33,10 @@ module Selenite
 
       def insert_values
         string = ""
+
         attributes.each_with_index do |obj, index|
           key = obj[0]
-          value = obj[0]
+          value = obj[1]
           next if key == "id"
           if value.is_a?(String)
             string += %('#{scape(value.to_s)}')
@@ -53,7 +48,9 @@ module Selenite
             string += %('#{scape(value.to_s)}')
           end
           string += ", " if index < (attributes.values.size-1)
+
         end
+
         string
       end
 

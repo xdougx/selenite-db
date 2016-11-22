@@ -1,6 +1,6 @@
 # selenite-db
 
-TODO: Write a description here
+Selenite is a persistency-model based library
 
 ## Installation
 
@@ -10,7 +10,7 @@ Add this to your application's `shard.yml`:
 ```yaml
 dependencies:
   selenite-db:
-    github: [your-github-name]/selenite-db
+    github: xdougx/selenite-db
 ```
 
 
@@ -22,7 +22,31 @@ require "selenite-db"
 ```
 
 
-TODO: Write usage instructions here
+When you build your model you'll need to define your properties, initializers, define your attribute types, and the table name.
+
+```crystal
+class Users < Selenite::DB::Persistence
+        
+  def self.table_name
+    "users"
+  end
+
+  @name : String?
+  @email : String?
+  @password : String?
+  @password_digest : String?
+  @token : String?
+  @temp_hash : String?
+  @status : String?
+  @gender : String?
+
+  property(id, created_at, updated_at)
+  set_property(name, email, password, password_digest, token, temp_hash, status, gender, created_at, updated_at)
+  set_initializer(true, id, name, email, password, password_digest, token, temp_hash, status, gender)
+
+end
+
+```
 
 ## Development
 

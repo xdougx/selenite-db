@@ -16,17 +16,24 @@ module Selenite
         end
       end
 
-      macro set_initializer(*names)
-      
+      macro set_initializer(timestamps, *names)
         def initialize(hash : Hash)
-          set_defaults
+          {% if timestamps %}
+            @created_at = Time.now
+            @updated_at = Time.now
+          {% end %}
+
           {% for name in names %}
             @{{name}} = hash.fetch("{{name}}") if hash.has_key?("{{name}}")
           {% end %}
         end
         
         def initialize
-          set_defaults
+          {% if timestamps %}
+            @created_at = Time.now
+            @updated_at = Time.now
+          {% end %}
+
           {% for name in names %}
             @{{name}} = ""
           {% end %}
@@ -37,11 +44,13 @@ module Selenite
           {% for name in names %}
             "{{name}}" => self.{{name}},
           {% end %}
+          {% if timestamps %}
+            "created_at" => Time.now,
+            "updated_at" => Time.now
+          {% end %}
           }
         end
       end
-
-
     end
   end
 end

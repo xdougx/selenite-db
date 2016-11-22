@@ -11,7 +11,7 @@ Selenite::DB::Configuration.configure do |conf|
 end
 
 class Users < Selenite::DB::Persistence
-  
+        
   def self.table_name
     "users"
   end
@@ -25,16 +25,13 @@ class Users < Selenite::DB::Persistence
   @status : String?
   @gender : String?
 
-
-  set_property(name, email, password, password_digest, token, temp_hash, status, gender)
-  set_initializer(id, name, email, password, password_digest, token, temp_hash, status, gender)
+  property(id, created_at, updated_at)
+  set_property(name, email, password, password_digest, token, temp_hash, status, gender, created_at, updated_at)
+  set_initializer(true, id, name, email, password, password_digest, token, temp_hash, status, gender)
 
 end
 
-
-
 user = Users.new({"name" => "Douglas", "email" => "doug.ross@email.net"})
-user.set_defaults
 user.save
 
 puts "Nome do usuário é: #{user.name}"
