@@ -19,10 +19,60 @@ dependencies:
 
 ```crystal
 require "selenite-db"
+
+# setup out connection
+Selenite::DB::Configuration.configure do |conf|
+  conf.client_encoding = "utf8"
+  conf.port = "5432"
+  conf.database = "crystal"
+  conf.user = "root"
+  conf.password = ""
+  conf.host = "localhost"
+  conf.env = "development"
+end
+
 ```
 
 
+
 When you build your model you'll need to define your properties, initializers, define your attribute types, and the table name.
+
+1. Create our base model
+
+
+```
+class Users < Selenite::DB::Persistence
+end
+```
+
+2. Define its table
+
+```
+def self.table_name
+  "users"
+end
+```
+
+3. Setup attributes types
+
+```
+  @name : String?
+  @email : String?
+  @password : String?
+  @password_digest : String?
+```
+
+4. Define the properties
+
+```
+  property(id, created_at, updated_at) # is needed to be separeted
+
+  set_property(name, email, password, password_digest) # base attributes
+
+  set_initializer(true, id, name, email, password, password_digest) # base initializer, **true** is for timestamp initialization
+```
+
+5. That is our base model
 
 ```crystal
 class Users < Selenite::DB::Persistence
@@ -35,17 +85,23 @@ class Users < Selenite::DB::Persistence
   @email : String?
   @password : String?
   @password_digest : String?
-  @token : String?
-  @temp_hash : String?
-  @status : String?
-  @gender : String?
 
-  property(id, created_at, updated_at)
-  set_property(name, email, password, password_digest, token, temp_hash, status, gender, created_at, updated_at)
-  set_initializer(true, id, name, email, password, password_digest, token, temp_hash, status, gender)
+  property(id, created_at, updated_at) # is needed to be separeted
+  set_property(name, email, password, password_digest) # base attributes
+  set_initializer(true, id, name, email, password, password_digest)
 
 end
 
+```
+
+6. Try it
+
+```
+user = Users.new({"name" => "Vitor Hugo", "email" => "vitor.hugo@email.net"})
+user.save
+
+puts "User name is: #{user.name}"
+puts "User email is: #{user.email}"
 ```
 
 
@@ -75,6 +131,7 @@ def self.find_by(params); end                          # find using many params
 - [ ] order
 - [ ] limit
 - [ ] offset
+- [ ] scheema
 
 ## Contributing
 
@@ -89,3 +146,8 @@ Would like to help us to improve our library?
 ## Contributors
 
 - [xdougx](https://github.com/xdougx) Douglas Rossignolli - creator, maintainer
+
+## Credits and Thanks
+
+- Crystal-Lang Irc/Gitter
+- @mverzilli

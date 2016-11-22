@@ -26,12 +26,12 @@ class Users < Selenite::DB::Persistence
   @gender : String?
 
   property(id, created_at, updated_at)
-  set_property(name, email, password, password_digest, token, temp_hash, status, gender, created_at, updated_at)
+  set_property(name, email, password, password_digest, token, temp_hash, status, gender)
   set_initializer(true, id, name, email, password, password_digest, token, temp_hash, status, gender)
 
 end
 
-user = Users.new({"name" => "Douglas", "email" => "doug.ross@email.net"})
+user = Users.new({"name" => "Vitor Hugo", "email" => "vitor.hugo@email.net"})
 user.save
 
 puts "Nome do usuário é: #{user.name}"
