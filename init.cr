@@ -27,7 +27,7 @@ class Users < Selenite::DB::Persistence
 
   property(id, created_at, updated_at)
   set_property(name, email, password, password_digest, token, temp_hash, status, gender)
-  set_initializer(true, id, name, email, password, password_digest, token, temp_hash, status, gender)
+  set_initializer(true, name, email, password, password_digest, token, temp_hash, status, gender)
 
 end
 
