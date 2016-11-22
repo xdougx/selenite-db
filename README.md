@@ -1,4 +1,4 @@
-# selenite-db
+# Selenite::DB
 
 Selenite is a persistency-model based library
 
