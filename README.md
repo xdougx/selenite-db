@@ -68,7 +68,7 @@ end
 
   set_property(name, email, password, password_digest) # base attributes
 
-  set_initializer(true, id, name, email, password, password_digest) # base initializer, **true** is for timestamp initialization
+  set_initializer(true, name, email, password, password_digest) # base initializer, **true** is for timestamp initialization
 ```
 
 #### 5 That is our base model
