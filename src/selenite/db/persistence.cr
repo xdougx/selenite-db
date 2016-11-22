@@ -19,7 +19,7 @@ module Selenite
       def save
         query = %(INSERT INTO #{table_name} (#{insert_keys}) VALUES(#{insert_values}) RETURNING id;)
         DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
-        result = self.class.connection.exec(query)
+        result = self.exec(query)
         if result.rows.size > 0
           self.id = result.rows.first[0]
           true
@@ -32,7 +32,7 @@ module Selenite
         params["updated_at"] = Time.now.to_s
         query = %(UPDATE #{table_name} SET #{update_values(params)} WHERE id = #{@id})
         DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
-        result = self.class.connection.exec(query)
+        result = self.exec(query)
         true
       end
 

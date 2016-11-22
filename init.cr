@@ -11,10 +11,6 @@ Selenite::DB::Base.configure do |conf|
   conf
 end
 
-p Selenite::DB::Base.config
-p Selenite::DB::Base.connection
-
-
 class Users < Selenite::DB::Persistence
   
   def self.table_name

@@ -6,35 +6,37 @@ module Selenite
 
       @@connection : PG::Connection?
       @@config : Selenite::DB::Configuration?
-      @@pool : ConnectionPool(PG)?
+      @@pool : ConnectionPool(PG::Connection)?
 
       def self.configure(&block)
-        @@config = Selenite::DB::Configuration.new
-        yield(@@config)
+        yield(self.config)
       end
 
-      def self.exec(query)
-        result = nil
-        @@pool.connection do |conn|
-          result = conn.exec(query)
-        end
-        result
+     def self.config
+        @@config ||= Selenite::DB::Configuration.new
       end
 
-      def self.config
-        @@config
-      end
-
-      def self.connection
-        @@pool = ConnectionPool(PG).new(capacity: 25, timeout: 0.01) do
+      def self.pool
+        @@pool ||= ConnectionPool(PG::Connection).new(capacity: 25, timeout: 0.01) do
           PG.connect(conn_str)
         end
       end
 
+      def self.exec(query)
+        conn = self.pool.checkout
+        result = conn.exec(query)
+        self.pool.checkin(conn)
+        result
+      end
+
+      def exec(query)
+        self.class.exec(query)
+      end
+
       def self.conn_str
-        base_string = "postgresql://#{@@config.host}:#{@@config.port}/#{@@config.database}?"
+        base_string = "postgresql://#{self.config.host}:#{self.config.port}/#{self.config.database}?"
         
-        config_array = @@config.as_hash.map do |key, value|
+        config_array = self.config.as_hash.map do |key, value|
           unless key.to_s.match(/(host|port|database)/)
             if(value != "" && value != nil)
               "#{key}=#{value}"
