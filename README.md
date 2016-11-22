@@ -64,11 +64,21 @@ def self.get_result_by(params); end                    # find using many params
 def self.find_by(params); end                          # find using many params
 ```
 
-## Development
+## Features Roadmap
 
-TODO: Write development instructions here
+- [ ] has_one
+- [ ] has_many
+- [ ] belongs_to
+- [ ] joins
+- [ ] where
+- [ ] validations
+- [ ] order
+- [ ] limit
+- [ ] offset
 
 ## Contributing
+
+Would like to help us to improve our library? 
 
 1. Fork it ( https://github.com/[your-github-name]/selenite-db/fork )
 2. Create your feature branch (git checkout -b my-new-feature)
@@ -78,4 +88,4 @@ TODO: Write development instructions here
 
 ## Contributors
 
-- [[your-github-name]](https://github.com/[your-github-name]) Douglas Rossignolli - creator, maintainer
+- [xdougx](https://github.com/xdougx) Douglas Rossignolli - creator, maintainer
