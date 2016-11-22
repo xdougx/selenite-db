@@ -3,26 +3,26 @@ module Selenite
     class LoggerDb
 
       SEVERITY = {
-        debug: Logger::Severity::DEBUG,
-        info: Logger::Severity::INFO,
-        warn: Logger::Severity::WARN,
-        error: Logger::Severity::ERROR,
-        fatal: Logger::Severity::FATAL,
-        unknown: Logger::Severity::UNKNOWN
+        "debug" => Logger::Severity::DEBUG,
+        "info" => Logger::Severity::INFO,
+        "warn" => Logger::Severity::WARN,
+        "error" => Logger::Severity::ERROR,
+        "fatal" => Logger::Severity::FATAL,
+        "unknown" => Logger::Severity::UNKNOWN
       }
 
       # TODO: need to check if it will work properly
       LOGGER_PATH = "#{__DIR__}/log/selenite_db.log"
+      @@logger : Logger
+      @@logger = Logger.new(get_logger_type)
 
-      def self.define_log
+      def self.get_logger_type
         if File.exists?(LOGGER_PATH)
-          @@logger = Logger.new(File.open(LOGGER_PATH, "a+"))
+          File.open(LOGGER_PATH, "a+")
         else
-          @@logger = Logger.new(STDOUT)
+          STDOUT
         end
       end
-
-      define_log
 
       def self.logger
         @@logger
@@ -32,11 +32,11 @@ module Selenite
       end
 
       def self.log(message, level = :info, label = "")
-        logger.log(severity.fetch(level), message, label)
+        @@logger.log(SEVERITY.fetch(level), message, label)
       end
 
       def self.putsl(message, level = :info, label = "")
-        logger.log(severity.fetch(level), message, label)
+        @@logger.log(SEVERITY.fetch(level), message, label)
       end
 
     end

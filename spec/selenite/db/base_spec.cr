@@ -22,12 +22,13 @@ describe Selenite::DB::Base do
     end
 
     it "should load a specific configuration" do
+
       Selenite::DB::Base.data["host"].should eq("localhost")
       Selenite::DB::Base.data["user"].should eq("root")
     end
 
     it "should have a postgre connection" do
-      # puts Selenite::DB::Base.connection
+      puts Selenite::DB::Base.connection
       true.should eq false
     end
   end

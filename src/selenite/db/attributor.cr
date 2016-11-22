@@ -17,6 +17,7 @@ module Selenite
       end
 
       macro set_initializer(*names)
+      
         def initialize(hash : Hash)
           {% for name in names %}
             @{{name}} = hash.fetch("{{name}}") if hash.has_key?("{{name}}")
@@ -37,6 +38,8 @@ module Selenite
           }
         end
       end
+
+
     end
   end
 end

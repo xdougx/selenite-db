@@ -4,21 +4,37 @@ module Selenite
       extend DB
       include Selenite::DB::Atributtor
 
-      DBCONN = PG.connect(conn_str)
+      @@connection : PG::Connection?
+      @@config : Selenite::DB::Configuration?
+      @@pool : ConnectionPool(PG)?
 
-      def self.configuration
-        @@configuration = Selenite::DB::Configuration.config
+      def self.configure(&block)
+        @@config = Selenite::DB::Configuration.new
+        yield(@@config)
+      end
+
+      def self.exec(query)
+        result = nil
+        @@pool.connection do |conn|
+          result = conn.exec(query)
+        end
+        result
+      end
+
+      def self.config
+        @@config
       end
 
       def self.connection
-        DBCONN
+        @@pool = ConnectionPool(PG).new(capacity: 25, timeout: 0.01) do
+          PG.connect(conn_str)
+        end
       end
 
       def self.conn_str
-        config = get_configuration
-        base_string = "postgresql://#{config["host"]}:#{config["port"]}/#{config["database"]}?"
+        base_string = "postgresql://#{@@config.host}:#{@@config.port}/#{@@config.database}?"
         
-        config_array = config.map do |key, value|
+        config_array = @@config.as_hash.map do |key, value|
           unless key.to_s.match(/(host|port|database)/)
             if(value != "" && value != nil)
               "#{key}=#{value}"
@@ -27,44 +43,6 @@ module Selenite
         end.compact
 
         base_string + config_array.join("&")
-      end
-
-      def self.get_configuration
-        config = configuration_by_env
-        
-        base_configuration.each do |key, value|
-          unless config.keys.includes?(key)
-            config[key] = value
-          end
-        end
-
-        config
-      end
-
-      def self.base_configuration
-        {
-          "client_encoding" => "utf8",
-          "port" => "5432",
-          "database" => "default",
-          "user" => "root",
-          "password" => "",
-          "host" => "localhost"
-        }
-      end
-
-      def self.configuration_by_env
-        data[env].as(Hash)
-      end 
-
-      def self.data
-        # TODO: Setup the path with a configuration
-        path = "#{root}/config/database.yml"
-        
-        if File.exists?(path)
-          YAML.parse(File.read(path))
-        else
-          base_configuration
-        end
       end
     end
   end

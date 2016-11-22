@@ -1,8 +1,11 @@
 module Selenite
   module DB
     abstract class Persistence < DB::Base
+      @id : Uuid
+      @created_at : Time?
+      @updated_at : Time?
 
-      # def self.table_name : String
+      property(id, created_at, updated_at)
 
       def set_defaults
         @created_at = Time.now if(@created_at == "" || @created_at.nil?) 
@@ -15,7 +18,7 @@ module Selenite
 
       def save
         query = %(INSERT INTO #{table_name} (#{insert_keys}) VALUES(#{insert_values}) RETURNING id;)
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = self.class.connection.exec(query)
         if result.rows.size > 0
           self.id = result.rows.first[0]
@@ -28,14 +31,16 @@ module Selenite
       def update_columns(params)
         params["updated_at"] = Time.now.to_s
         query = %(UPDATE #{table_name} SET #{update_values(params)} WHERE id = #{@id})
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = self.class.connection.exec(query)
         true
       end
 
       def insert_values
         string = ""
-        attributes.each_with_index do |key, value, index|
+        attributes.each_with_index do |obj, index|
+          key = obj[0]
+          value = obj[0]
           next if key == "id"
           if value.is_a?(String)
             string += %('#{scape(value.to_s)}')
@@ -89,7 +94,7 @@ module Selenite
 
       def self.exists?(column, value)
         query = %(SELECT id FROM #{table_name} WHERE #{column} = '#{value}' LIMIT 1;)
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = connection.exec(query)
         result.rows.size > 0
       end
@@ -97,14 +102,14 @@ module Selenite
       def self.exists?(params)
         where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
         query = %(SELECT id FROM #{table_name} WHERE #{where} LIMIT 1;)
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = connection.exec(query)
         result.rows.size > 0
       end
 
       def self.find(id : Int32 | Int64 | String | Nil)
         query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE id = id LIMIT 1;)
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = connection.exec(query)
 
         if result.rows.size > 0
@@ -117,14 +122,14 @@ module Selenite
       def self.get_result_by(params)
         where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
         query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE #{where} LIMIT 1;)
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         connection.exec(query)
       end
       
       def self.find_by(params)
         where = params.map {|key, val| %(#{table_name}.#{key} = '#{val}') }.join(" AND ")
         query = %(SELECT #{new.attributes.keys.join(", ")} FROM #{table_name} WHERE #{where} LIMIT 1;)      
-        DB::LoggerDb.log(query.colorize(:light_gray).bold, :info, "Model")
+        DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = connection.exec(query)
         if result.rows.size > 0
           new(result.to_hash.first)
