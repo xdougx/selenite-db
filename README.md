@@ -37,7 +37,7 @@ end
 
 When you build your model you'll need to define your properties, initializers, define your attribute types, and the table name.
 
-1. Create our base model
+#### 1 Create our base model
 
 
 ```
@@ -45,7 +45,7 @@ class Users < Selenite::DB::Persistence
 end
 ```
 
-2. Define its table
+#### 2 Define its table
 
 ```
 def self.table_name
@@ -53,7 +53,7 @@ def self.table_name
 end
 ```
 
-3. Setup attributes types
+#### 3 Setup attributes types
 
 ```
   @name : String?
@@ -62,7 +62,7 @@ end
   @password_digest : String?
 ```
 
-4. Define the properties
+#### 4 Define the properties
 
 ```
   property(id, created_at, updated_at) # is needed to be separeted
@@ -72,7 +72,7 @@ end
   set_initializer(true, id, name, email, password, password_digest) # base initializer, **true** is for timestamp initialization
 ```
 
-5. That is our base model
+#### 5 That is our base model
 
 ```crystal
 class Users < Selenite::DB::Persistence
@@ -94,7 +94,7 @@ end
 
 ```
 
-6. Try it
+#### 6 Try it
 
 ```
 user = Users.new({"name" => "Vitor Hugo", "email" => "vitor.hugo@email.net"})
