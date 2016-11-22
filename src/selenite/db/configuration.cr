@@ -1,7 +1,10 @@
 module Selenite
   module DB
     class Configuration
-      
+        
+      @@current : Selenite::DB::Configuration
+      @@current = Selenite::DB::Configuration.new
+
       @client_encoding : String
       @port : String
       @database : String
@@ -11,6 +14,20 @@ module Selenite
       @env : String
 
       property(client_encoding, port, database, user, password, host, env)
+
+
+      def self.configure(&block)
+        yield(self.current)
+      end
+
+      def self.current
+        @@current
+      end
+
+      def self.get_configuration
+        self.current
+      end
+
 
       def initialize
         @client_encoding = "utf8"
@@ -36,3 +53,4 @@ module Selenite
     end
   end
 end
+

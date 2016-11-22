@@ -5,15 +5,12 @@ module Selenite
       include Selenite::DB::Atributtor
 
       @@connection : PG::Connection?
-      @@config : Selenite::DB::Configuration?
+      @@config : Selenite::DB::Configuration
+      @@config = Selenite::DB::Configuration.get_configuration
       @@pool : ConnectionPool(PG::Connection)?
 
-      def self.configure(&block)
-        yield(self.config)
-      end
-
-     def self.config
-        @@config ||= Selenite::DB::Configuration.new
+      def self.config
+        @@config ||= Selenite::DB::Configuration.get_configuration
       end
 
       def self.pool

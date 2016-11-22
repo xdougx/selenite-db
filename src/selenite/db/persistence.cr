@@ -17,6 +17,7 @@ module Selenite
       end
 
       def save
+        set_defaults
         query = %(INSERT INTO #{table_name} (#{insert_keys}) VALUES(#{insert_values}) RETURNING id;)
         DB::LoggerDb.log(query.colorize(:light_gray).bold, "info", "Model")
         result = self.exec(query)

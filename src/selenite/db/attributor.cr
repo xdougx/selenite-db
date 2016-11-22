@@ -19,12 +19,14 @@ module Selenite
       macro set_initializer(*names)
       
         def initialize(hash : Hash)
+          set_defaults
           {% for name in names %}
             @{{name}} = hash.fetch("{{name}}") if hash.has_key?("{{name}}")
           {% end %}
         end
         
         def initialize
+          set_defaults
           {% for name in names %}
             @{{name}} = ""
           {% end %}
