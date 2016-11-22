@@ -39,14 +39,14 @@ When you build your model you'll need to define your properties, initializers, a
 
 #### 1 Create our base model
 
-```
+```crystal
 class Users < Selenite::DB::Persistence
 end
 ```
 
 #### 2 Define its table
 
-```
+```crystal
 def self.table_name
   "users"
 end
@@ -54,7 +54,7 @@ end
 
 #### 3 Setup attributes types
 
-```
+```crystal
   @name : String?
   @email : String?
   @password : String?
@@ -63,7 +63,7 @@ end
 
 #### 4 Define the properties
 
-```
+```crystal
   property(id, created_at, updated_at) # is needed to be separeted
 
   set_property(name, email, password, password_digest) # base attributes
@@ -95,7 +95,7 @@ end
 
 #### 6 Try it
 
-```
+```crystal
 user = Users.new({"name" => "Vitor Hugo", "email" => "vitor.hugo@email.net"})
 user.save
 
