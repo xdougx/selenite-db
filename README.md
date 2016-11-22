@@ -35,10 +35,9 @@ end
 
 
 
-When you build your model you'll need to define your properties, initializers, define your attribute types, and the table name.
+When you build your model you'll need to define your properties, initializers, attributes types, and the table name.
 
 #### 1 Create our base model
-
 
 ```
 class Users < Selenite::DB::Persistence
